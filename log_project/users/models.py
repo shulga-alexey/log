@@ -15,7 +15,7 @@ class Student(models.Model):
             on_delete=models.CASCADE
         )
     group = models.ForeignKey(
-            'StudentsGroup',
+            'StudentGroup',
             on_delete=models.SET_NULL,
             related_name='students',
             blank=True,
@@ -23,7 +23,7 @@ class Student(models.Model):
         )
 
 
-class StudentsGroup(models.Model):
+class StudentGroup(models.Model):
     title = models.CharField(
             max_length=250
         )

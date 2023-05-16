@@ -15,6 +15,11 @@ class Task(models.Model):
     slug = models.SlugField(
             max_length=250
         )
+    status = models.CharField(
+            max_length=2,
+            choices=Status.choices,
+            default=Status.REJECTED
+        )
     producer_teacher = models.ForeignKey(
             Teacher,
             related_name='produced_tasks',
@@ -31,11 +36,6 @@ class Task(models.Model):
             related_name='tasks',
             through='AppointedTask',
             through_fields=('task', 'student'),
-        )
-    status = models.CharField(
-            max_length=2,
-            choices=Status.choices,
-            default=Status.REJECTED
         )
     created = models.DateTimeField(
             auto_now_add=True
