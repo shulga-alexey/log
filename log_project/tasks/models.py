@@ -1,35 +1,6 @@
-from django.conf import settings
 from django.db import models
 
-
-class Teacher(models.Model):
-    user = models.OneToOneField(settings.AUTH_USER_MODEL,
-                                on_delete=models.CASCADE)
-
-
-class Student(models.Model):
-    user = models.OneToOneField(settings.AUTH_USER_MODEL,
-                                on_delete=models.CASCADE)
-    tasks = models.ManyToManyField('Task',
-                                   through='AppointedTask',
-                                   through_fields=('student', 'task'))
-    group = models.ForeignKey('StudentsGroup',
-                              on_delete=models.SET_NULL,
-                              related_name='students',
-                              blank=True,
-                              null=True)
-
-
-class StudentsGroup(models.Model):
-    title = models.CharField(max_length=250)
-    slug = models.SlugField(unique=True)
-    description = models.TextField()
-
-    class Meta:
-        ordering = ['title']
-
-    def __str__(self):
-        return self.title
+from users.models import Teacher, Student
 
 
 class Task(models.Model):
@@ -38,20 +9,41 @@ class Task(models.Model):
         REJECTED = 'RJ', 'Rejected'
         ACCEPTED = 'AC', 'Accepted'
 
-    title = models.CharField(max_length=250)
-    slug = models.SlugField(max_length=250)
+    title = models.CharField(
+            max_length=250
+        )
+    slug = models.SlugField(
+            max_length=250
+        )
+    producer_teacher = models.ForeignKey(
+            Teacher,
+            related_name='produced_tasks',
+            on_delete=models.CASCADE
+        )
+    appointor_teachers = models.ManyToManyField(
+            Teacher,
+            related_name='appointor_tasks',
+            through='AppointedTask',
+            through_fields=('task', 'appointor_teacher'),
+        )
+    students = models.ManyToManyField(
+            Student,
+            related_name='tasks',
+            through='AppointedTask',
+            through_fields=('task', 'student'),
+        )
+    status = models.CharField(
+            max_length=2,
+            choices=Status.choices,
+            default=Status.REJECTED
+        )
+    created = models.DateTimeField(
+            auto_now_add=True
+        )
+    updated = models.DateTimeField(
+            auto_now=True
+        )
     text = models.TextField()
-    producer_teacher = models.ForeignKey('Teacher',
-                                         on_delete=models.CASCADE,
-                                         related_name='tasks')
-    students = models.ManyToManyField('Student',
-                                      through='AppointedTask',
-                                      through_fields=('task', 'student'))
-    status = models.CharField(max_length=2,
-                              choices=Status.choices,
-                              default=Status.REJECTED)
-    created = models.DateTimeField(auto_now_add=True)
-    updated = models.DateTimeField(auto_now=True)
 
     class Meta:
         ordering = ['title']
@@ -61,10 +53,9 @@ class Task(models.Model):
 
 
 class AppointedTask(models.Model):
-    task = models.ForeignKey('Task',
-                             on_delete=models.CASCADE,
-                             related_name='appointed')
-    student = models.ForeignKey('Student',
+    task = models.ForeignKey(Task,
+                             on_delete=models.CASCADE)
+    student = models.ForeignKey(Student,
                                 on_delete=models.CASCADE)
     appointor_teacher = models.ForeignKey(Teacher,
                                           on_delete=models.CASCADE)
