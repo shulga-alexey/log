@@ -3,6 +3,11 @@ from django.db import models
 from users.models import Teacher, Student
 
 
+class AcceptedManager(models.Manager):
+    def get_queryset(self):
+        return super().get_queryset().filter(status=Task.Status.ACCEPTED)
+
+
 class Task(models.Model):
 
     class Status(models.TextChoices):
@@ -19,6 +24,13 @@ class Task(models.Model):
             max_length=2,
             choices=Status.choices,
             default=Status.REJECTED
+        )
+    group = models.ForeignKey(
+            'TaskGroup',
+            on_delete=models.SET_NULL,
+            related_name='tasks',
+            blank=True,
+            null=True
         )
     producer_teacher = models.ForeignKey(
             Teacher,
@@ -44,6 +56,25 @@ class Task(models.Model):
             auto_now=True
         )
     text = models.TextField()
+
+    objects = models.Manager()
+    accepted = AcceptedManager()
+
+    class Meta:
+        ordering = ['title']
+
+    def __str__(self):
+        return self.title
+
+
+class TaskGroup(models.Model):
+    title = models.CharField(
+            max_length=250
+        )
+    slug = models.SlugField(
+            unique=True
+        )
+    description = models.TextField()
 
     class Meta:
         ordering = ['title']
