@@ -22,6 +22,7 @@ source env/bin/activate
 Install dependencies:
 
 ```
+python3 -m pip install --upgrade pip
 pip install -r requirements.txt
 ```
 
@@ -36,3 +37,5 @@ Run project:
 ```
 python3 manage.py runserver
 ```
+
+After the project is launched, the site will be available at http://127.0.0.1:8000/.
