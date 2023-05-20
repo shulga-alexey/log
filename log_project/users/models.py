@@ -7,18 +7,12 @@ class Teacher(models.Model):
             settings.AUTH_USER_MODEL,
             on_delete=models.CASCADE
         )
-    slug = models.SlugField(
-            unique=True
-        )
 
 
 class Student(models.Model):
     user = models.OneToOneField(
             settings.AUTH_USER_MODEL,
             on_delete=models.CASCADE
-        )
-    slug = models.SlugField(
-            unique=True
         )
     teacher = models.ForeignKey(
             'Teacher',

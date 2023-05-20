@@ -5,13 +5,13 @@ app_name = 'tasks'
 
 urlpatterns = [
     path(
-            '<int:task_id>/',
-            views.task_detail,
+            '<int:pk>/',
+            views.TaskDetailView.as_view(),
             name='task_detail'
         ),
     path(
-            'task_group/<int:task_group_id>/',
-            views.task_group,
+            'task_group/<int:pk>/',
+            views.TaskGroupDetailView.as_view(),
             name='task_group'
         ),
 ]

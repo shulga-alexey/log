@@ -1,3 +1,11 @@
-from django.shortcuts import render
+from django.views import generic
 
-# Create your views here.
+from .models import Task, TaskGroup
+
+
+class TaskDetailView(generic.DetailView):
+    model = Task
+
+
+class TaskGroupDetailView(generic.DetailView):
+    model = TaskGroup

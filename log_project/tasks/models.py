@@ -1,4 +1,5 @@
 from django.db import models
+from django.urls import reverse
 
 from users.models import Teacher, Student
 
@@ -15,9 +16,6 @@ class Task(models.Model):
         ACCEPTED = 'AC', 'Accepted'
 
     title = models.CharField(
-            max_length=250
-        )
-    slug = models.SlugField(
             max_length=250
         )
     status = models.CharField(
@@ -41,13 +39,13 @@ class Task(models.Model):
             Teacher,
             related_name='appointor_tasks',
             through='AppointedTask',
-            through_fields=('task', 'appointor_teacher'),
+            through_fields=('task', 'appointor_teacher')
         )
     students = models.ManyToManyField(
             Student,
             related_name='tasks',
             through='AppointedTask',
-            through_fields=('task', 'student'),
+            through_fields=('task', 'student')
         )
     created = models.DateTimeField(
             auto_now_add=True
@@ -65,6 +63,9 @@ class Task(models.Model):
 
     def __str__(self):
         return self.title
+
+    def get_absolute_url(self):
+        return reverse('tasks:task_detail', args=[self.id])
 
 
 class TaskGroup(models.Model):
