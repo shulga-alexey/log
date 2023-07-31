@@ -22,6 +22,7 @@ class StudentAdmin(admin.ModelAdmin):
 
 @admin.register(StudentGroup)
 class StudentGroupAdmin(admin.ModelAdmin):
+
     list_display = ('title', 'slug')
     search_fields = ('title', 'description')
     ordering = ('title',)
