@@ -5,6 +5,7 @@ from .models import Student, StudentGroup, Teacher
 
 @admin.register(Teacher)
 class TaskAdmin(admin.ModelAdmin):
+
     list_display = ('user',)
     search_fields = ('user',)
     ordering = ('user',)
@@ -12,6 +13,7 @@ class TaskAdmin(admin.ModelAdmin):
 
 @admin.register(Student)
 class StudentAdmin(admin.ModelAdmin):
+
     list_display = ('user', 'group')
     list_filter = ('group',)
     search_fields = ('user', 'group')
